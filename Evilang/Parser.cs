@@ -8,9 +8,10 @@ public class Parser
     private int _size = 1;
     private bool _hasError;
     private byte[] _arrays;
+    private int _segmentPtr;
     private readonly bool _verbose;
     
-    private readonly Stack<int> _loop = new ();
+    private readonly Stack<(int segmentPtr, int cellPtr)> _loop = new ();
     
     private readonly Dictionary<string, TokenType> _keywords = new ()
     {
@@ -37,10 +38,18 @@ public class Parser
 
     public void Parse(string code)
     {
-        var segments = code.Split(" ");
-
-        foreach (var segment in segments)
+        var lines = code.Split(Environment.NewLine);
+        var segments = new List<string>();
+        
+        foreach (var line in lines)
         {
+            segments.AddRange(line.Split(" "));
+        }
+
+        int totalSegments = segments.Count;
+        for (_segmentPtr = 0; _segmentPtr < totalSegments; _segmentPtr++)
+        {
+            var segment = segments[_segmentPtr];
             if (_keywords.ContainsKey(segment))
             {
                 if (_hasError) return;
@@ -56,8 +65,6 @@ public class Parser
                 Execute(c.ToString());
             }
         }
-        
-        // LogArray();
     }
 
     private void Execute(string chunk)
@@ -68,8 +75,6 @@ public class Parser
             return;
         }
         
-        // LogParse(chunk, tokenType);
-        
         switch (tokenType)
         {
             case TokenType.Initialize: SetArraySize();break;
@@ -78,10 +83,10 @@ public class Parser
             case TokenType.Increment: Increment(); break;
             case TokenType.Decrement: Decrement(); break;
             case TokenType.Input: break;
-            case TokenType.Output: Ouput(); break;
+            case TokenType.Output: Output(); break;
             case TokenType.OutputInt: OutputInt(); break;
-            case TokenType.Loop: break;
-            case TokenType.Goto: break;
+            case TokenType.Loop: Loop(); break;
+            case TokenType.Goto: Goto(); break;
         }
     }
 
@@ -136,18 +141,58 @@ public class Parser
         Console.WriteLine($"[{_ptr}] = {_arrays[_ptr]}");
     }
 
-    private void Ouput()
+    private void Output()
     {
         if (IsError()) return;
 
-        Console.Write(Convert.ToChar(_arrays[_ptr]));
+        var output = Convert.ToChar(_arrays[_ptr]);
+        if (_verbose)
+        {
+            Console.WriteLine($"Output {output}");
+        }
+        else
+        {
+            Console.Write(output);
+        }
     }
 
     private void OutputInt()
     {
         if (IsError()) return;
 
-        Console.Write(_arrays[_ptr]);
+        var output = _arrays[_ptr];
+        if (_verbose)
+        {
+            Console.WriteLine($"Output {output}");
+        }
+        else
+        {
+            Console.Write(output);
+        }
+    }
+
+    private void Loop()
+    {
+        _loop.Push((_segmentPtr, _ptr));
+        
+        if (!_verbose) return;
+        Console.WriteLine($"Condition Cell [{_ptr}] = {_arrays[_ptr]}");
+    }
+
+    private void Goto()
+    {
+        if (_loop.Count == 0) return;
+
+        var check = _loop.Peek();
+        if (_arrays[check.cellPtr] == 0)
+        {
+            _loop.Pop();
+            if (!_verbose) return;
+            Console.WriteLine("Stop Loop");
+            return;
+        }
+        
+        _segmentPtr = check.segmentPtr;
     }
 
     private bool IsError()

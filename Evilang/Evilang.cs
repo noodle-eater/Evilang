@@ -47,5 +47,8 @@ void ShowDocs()
     Console.WriteLine("4. i     => Add value in current cell by 1.");
     Console.WriteLine("5. l     => Reduce value in current cell by 1.");
     Console.WriteLine("6. ev    => Print the value in cell as char.");
-    Console.WriteLine("6. evi   => Print the value in cell as int.");
+    Console.WriteLine("7. evi   => Print the value in cell as int.");
+    Console.WriteLine("8. il    => Start loop until current cell value 0.");
+    Console.WriteLine("9. el    => End loop.");
+
 }
