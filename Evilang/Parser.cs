@@ -5,11 +5,11 @@ namespace Evilang;
 public class Parser
 {
     private int _ptr = 0;
-    private int _size = 1;
+    private int _size = 0;
     private bool _hasError;
     private byte[] _arrays;
     private int _segmentPtr;
-    private readonly bool _verbose;
+    private bool _verbose;
     
     private readonly Stack<(int segmentPtr, int cellPtr)> _loop = new ();
     
@@ -35,6 +35,8 @@ public class Parser
         _verbose = verbose;
         _arrays = Array.Empty<byte>();
     }
+
+    public void SetVerbose(bool verbose) => _verbose = verbose;
 
     public void Parse(string code)
     {
@@ -65,6 +67,8 @@ public class Parser
                 Execute(c.ToString());
             }
         }
+
+        if (segments[^1] == "ev" || segments[^1] == "evi") Console.WriteLine();
     }
 
     private void Execute(string chunk)
@@ -82,7 +86,7 @@ public class Parser
             case TokenType.ShiftRight: ShiftRight(); break;
             case TokenType.Increment: Increment(); break;
             case TokenType.Decrement: Decrement(); break;
-            case TokenType.Input: break;
+            case TokenType.Input: Input(); break;
             case TokenType.Output: Output(); break;
             case TokenType.OutputInt: OutputInt(); break;
             case TokenType.Loop: Loop(); break;
@@ -139,6 +143,21 @@ public class Parser
 
         if (!_verbose) return;
         Console.WriteLine($"[{_ptr}] = {_arrays[_ptr]}");
+    }
+
+    private void Input()
+    {
+        if (IsError()) return;
+
+        var inputStr = Console.ReadLine();
+        if (byte.TryParse(inputStr, out var input))
+        {
+            _arrays[_ptr] = input;
+        }
+        else
+        {
+            Console.WriteLine($"Error unexpected input '{input}'");
+        }
     }
 
     private void Output()
