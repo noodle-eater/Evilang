@@ -16,3 +16,10 @@ The commands are:
 | 8 | evi | Output the byte value at current cell |
 | 9 | il | Start loop. |
 | 10 | el | Stop loop if the cell at the pointer is zero. |
+
+## Example
+```
+evil evil evil i evi e ii evi e iii evi e iiii evi e iiiii evi e iiiiii evi e iiiiiii evi
+
+#Ouput: 1234567
+```
