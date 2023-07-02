@@ -1,6 +1,6 @@
 # Evilang
 
-Evilang is a toy scripting inspired by brainf**ck and Chicken. Similar to brainf**ck, Evilang also operates on an array of memory cells and has a pointer that point into first-cell memory. the cell size is range from 0 - 255. The syntax is taken from the word and letter evil. Currently evilang only run on its REPL.
+Evilang is a toy scripting inspired by brainf**ck and Chicken. Similar to brainf\*\*ck, Evilang also operates on an array of memory cells and has a pointer that point into first-cell memory. the cell size is range from 0 - 255. The syntax is taken from the word and letter evil. Currently evilang only run on its REPL.
 
 The syntax are: 
 
