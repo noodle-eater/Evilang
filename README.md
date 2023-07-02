@@ -13,7 +13,7 @@ The syntax are:
 | 5 | l | Decrement current memory cell. |
 | 6 | vi | Input a byte and store it in the current cell |
 | 7 | ev | Output the character at the current cell |
-| 8 | evi | Output the byte value at current cell |
+| 8 | evi | Output the byte value at the current cell |
 | 9 | il | Start loop. |
 | 10 | el | Stop loop if the cell at the pointer is zero. |
 
@@ -24,5 +24,5 @@ evil evil evil i evi e ii evi e iii evi e iiii evi e iiiii evi e iiiiii evi e ii
 #Ouput: 1234567
 ```
 ## ToDo
-* Better output log.
+* Improve REPL.
 * Run from file.
